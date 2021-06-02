@@ -1,0 +1,23 @@
+.el-icon-more {
+  transform-origin: center center;
+  transform: rotate(90deg);
+}
+.el-button {
+  width: 100px !important;
+}
+.el-form-item__label {
+  line-height: 30px !important;
+}
+.el-checkbox__input.is-checked+.el-checkbox__label {
+  color: rgba(73, 80, 87, 1);
+}
+.el-form--label-top .el-form-item__label {
+  padding: 0;
+}
+.el-form-item {
+  margin-bottom: 15px;
+}
+.el-form-item__label {
+  font-size: 10.5px;
+  line-height: 12px;
+}
