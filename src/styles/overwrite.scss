@@ -21,3 +21,6 @@
   font-size: 10.5px;
   line-height: 12px;
 }
+.el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before {
+  content: '';
+}

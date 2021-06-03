@@ -4,6 +4,42 @@
   </div>
 </template>
 
+<script>
+  import { mapGetters, mapMutations } from "vuex";
+
+  export default {
+    name: "App",
+    data() {
+      return {
+        windowWidth: window.innerWidth,
+      };
+    },
+    computed: {
+      ...mapGetters("shared", ["error"]),
+    },
+    watch: {
+      error() {
+        if (this.error) {
+          this.$notify.error({
+            title: "Ошибка",
+            message: this.error,
+          });
+        }
+      },
+    },
+    methods: {
+      ...mapMutations("shared", ["setWindowWidth"]),
+    },
+    mounted() {
+      this.setWindowWidth(this.windowWidth);
+      window.onresize = () => {
+        this.windowWidth = window.innerWidth;
+        this.setWindowWidth(this.windowWidth);
+      };
+    },
+  };
+</script>
+
 <style lang="scss">
   #app {
   }

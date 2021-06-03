@@ -1,6 +1,6 @@
 <template>
-  <el-form-item :label="label" :prop="item">
-    <el-input v-model="model" size="medium" @input="updateValue"></el-input>
+  <el-form-item :label="label" :prop="propName">
+    <el-input v-model="model" size="medium" :type="type" @input="updateValue"></el-input>
   </el-form-item>
 </template>
 
@@ -10,6 +10,8 @@
     props: {
       label: String,
       item: String,
+      propName: String,
+      type: String,
     },
     data() {
       return {
@@ -18,7 +20,7 @@
     },
     methods: {
       updateValue() {
-        this.$emit("value", this.model);
+        this.$emit("update", this.model);
       },
     },
   };
