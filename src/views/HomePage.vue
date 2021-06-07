@@ -50,9 +50,8 @@
     },
     components: { ButtonApp, InputApp },
     methods: {
-      ...mapActions("user", ["loginUser", "refreshToken"]),
+      ...mapActions("user", ["loginUser"]),
       submitForm(formName) {
-        this.refreshToken();
         this.$refs[formName].validate(async valid => {
           if (valid) {
             const user = {
@@ -76,6 +75,7 @@
       },
       clearToken() {
         localStorage.removeItem("token");
+        localStorage.removeItem("refresh_token");
       },
     },
   };
