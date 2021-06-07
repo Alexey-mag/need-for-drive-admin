@@ -1,13 +1,5 @@
 import axios from "axios";
 
-// class User {
-//   constructor(email, password, token) {
-//     this.email = email;
-//     this.password = password;
-//     this.token = token;
-//   }
-// }
-
 export default {
   namespaced: true,
   state: {
@@ -76,7 +68,6 @@ export default {
             client_secret: process.env.VUE_APP_API_KEY,
           },
         });
-        console.log(data);
         commit("setUser", data);
         localStorage.setItem("token", data["access_token"]);
         localStorage.setItem("refresh_token", data["refresh_token"]);
