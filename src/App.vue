@@ -29,8 +29,21 @@
     },
     methods: {
       ...mapMutations("shared", ["setWindowWidth"]),
+      ...mapMutations("user", ["createBase64Token", "refreshToken"]),
     },
     mounted() {
+      if (localStorage.getItem("tokenCreated")) {
+        const tokenAge = localStorage.getItem("tokenCreated") - Date.now();
+        if (tokenAge > 21600000 && tokenAge < 86100000) {
+          this.refreshToken();
+        } else {
+          localStorage.removeItem("token");
+          localStorage.removeItem("refresh_token");
+          localStorage.removeItem("tokenCreated");
+        }
+      } else {
+        this.createBase64Token();
+      }
       this.setWindowWidth(this.windowWidth);
       window.onresize = () => {
         this.windowWidth = window.innerWidth;
