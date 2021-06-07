@@ -23,6 +23,9 @@
         this.$emit("update", this.model);
       },
     },
+    mounted() {
+      this.model = this.item;
+    },
   };
 </script>
 

@@ -36,8 +36,8 @@
     data() {
       return {
         form: {
-          email: "",
-          password: "",
+          email: "intern",
+          password: "intern-S!",
         },
         rules: {
           email: [{ required: true, message: "Пожалуйста, введите email", trigger: "blur" }],
@@ -50,16 +50,19 @@
     },
     components: { ButtonApp, InputApp },
     methods: {
-      ...mapActions("user", ["loginUser"]),
+      ...mapActions("user", ["loginUser", "refreshToken"]),
       submitForm(formName) {
-        this.$refs[formName].validate(valid => {
+        this.refreshToken();
+        this.$refs[formName].validate(async valid => {
           if (valid) {
             const user = {
               email: this.form.email,
               password: this.form.password,
             };
-            this.loginUser(user);
-            this.$router.push("/admin");
+            let res = await this.loginUser(user);
+            if (res) {
+              this.$router.push("/admin");
+            }
           } else {
             return false;
           }
