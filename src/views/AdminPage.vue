@@ -5,15 +5,17 @@
     <el-main class="admin_main">
       <router-view />
     </el-main>
+    <footer-app />
   </el-container>
 </template>
 
 <script>
   import NavApp from "@/components/Admin/NavApp";
   import HeaderApp from "@/components/Admin/HeaderApp";
+  import FooterApp from "@/components/Admin/FooterApp";
   export default {
     name: "AdminPage",
-    components: { HeaderApp, NavApp },
+    components: { HeaderApp, NavApp, FooterApp },
     data() {
       return {};
     },
@@ -35,6 +37,6 @@
   .admin__header {
   }
   .admin_main {
-    grid-area: 4 / 11 / 26 / 46;
+    grid-area: 3 / 11 / 23 / 46;
   }
 </style>
