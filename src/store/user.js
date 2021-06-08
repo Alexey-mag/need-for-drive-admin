@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "@/router";
 
 export default {
   namespaced: true,
@@ -17,6 +18,9 @@ export default {
       const token = r + ":" + process.env.VUE_APP_API_KEY;
       localStorage.setItem("token64", btoa(token));
       state.base64Token = btoa(token);
+    },
+    clearUser(state) {
+      state.user = {};
     },
   },
   actions: {
@@ -74,6 +78,29 @@ export default {
         const now = Date.now();
         localStorage.setItem("tokenCreated", now);
         this.commit("shared/clearError");
+      } catch (e) {
+        this.commit("shared/setError", e.message);
+        throw e;
+      }
+    },
+    async logoutUser({ commit }) {
+      this.commit("shared/clearError");
+      try {
+        await axios({
+          url: process.env.VUE_APP_API_AUTH + "/auth/logout",
+          method: "post",
+          headers: {
+            "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_FACTORY_ID"]}`,
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        localStorage.removeItem("token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("tokenCreated");
+        localStorage.removeItem("user");
+        commit("clearUser");
+        await router.push({ name: "HomePage" });
       } catch (e) {
         this.commit("shared/setError", e.message);
         throw e;

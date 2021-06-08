@@ -17,7 +17,7 @@
             @update="updatePassword"
           />
           <div class="form__footer">
-            <a href="" class="form__footer_anchor" @click="clearToken">Запросить доступ</a>
+            <el-link class="form__footer_anchor" type="primary" @click="clearToken">Запросить доступ</el-link>
             <button-app name="Войти" button-type="primary" @click="submitForm('form')" />
           </div>
         </el-form>
@@ -126,7 +126,6 @@
     text-decoration: none;
     font-size: 10.5px;
     line-height: 12px;
-    color: $main-blue;
   }
   .header__img {
     width: 45px;

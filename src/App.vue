@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from "vuex";
+  import { mapGetters, mapMutations, mapActions } from "vuex";
 
   export default {
     name: "App",
@@ -29,17 +29,15 @@
     },
     methods: {
       ...mapMutations("shared", ["setWindowWidth"]),
-      ...mapMutations("user", ["createBase64Token", "refreshToken"]),
+      ...mapActions("user", ["refreshToken", "logoutUser"]),
     },
     mounted() {
       if (localStorage.getItem("tokenCreated")) {
-        const tokenAge = localStorage.getItem("tokenCreated") - Date.now();
-        if (tokenAge > 21600000 && tokenAge < 86100000) {
+        const tokenAge = Date.now() - localStorage.getItem("tokenCreated");
+        if (tokenAge < 86100000) {
           this.refreshToken();
         } else {
-          localStorage.removeItem("token");
-          localStorage.removeItem("refresh_token");
-          localStorage.removeItem("tokenCreated");
+          this.logoutUser();
         }
       } else {
         this.createBase64Token();
