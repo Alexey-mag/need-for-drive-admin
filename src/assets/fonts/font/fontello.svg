@@ -1,0 +1,26 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2021 by original authors @ fontello.com</metadata>
+<defs>
+<font id="fontello" horiz-adv-x="1000" >
+<font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="menu_4" unicode="&#xe800;" d="M343 399h-204v257h204v-257z m0-299h-204v256h204v-256z m41 0h204v256h-204v-256z m449 0h-204v256h204v-256z m-449 299h204v257h-204v-257z m245 0v257h204v-257h-204z" horiz-adv-x="1000" />
+
+<glyph glyph-name="menu_5" unicode="&#xe801;" d="M778 707h-592c-43 0-79-36-79-79v-119h750v119c0 43-35 79-79 79z m0-714h-118v436h197v-357c0-43-35-79-79-79z m-197 436h-197v-436h197v436z m-395-436c-43 0-79 36-79 79v357h198v-436h-119z" horiz-adv-x="929" />
+
+<glyph glyph-name="menu_6" unicode="&#xe802;" d="M760 610c0-133-108-241-241-241-133 0-240 108-240 241 0 132 107 240 240 240 133 0 241-108 241-240z m-721-601c0 160 320 240 480 240 161 0 481-80 481-240v-121h-961v121z" horiz-adv-x="1000" />
+
+<glyph glyph-name="menu_7" unicode="&#xe803;" d="M483 750c-211 0-383-172-383-383 0-212 172-384 383-384 212 0 384 172 384 384 0 211-172 383-384 383z m39-575h-77v77h77v-77z m-77 153h77v230h-77v-230z" horiz-adv-x="1000" />
+
+<glyph glyph-name="notification" unicode="&#xe804;" d="M732 419v-253l101-102v-50h-809v50l101 102v253c0 156 83 286 228 321v34c0 42 34 76 76 76 42 0 76-34 76-76v-34c144-35 227-165 227-321z m-195-460c0-59-49-107-108-107-60 0-108 48-108 107h216z" horiz-adv-x="857" />
+
+<glyph glyph-name="orders" unicode="&#xe805;" d="M625 767h-333c-46 0-83-38-83-84l-1-666c0-46 37-84 83-84h501c46 0 83 38 83 84v500l-250 250z m83-584h-125v-125h-83v125h-125v84h125v125h83v-125h125v-84z m-125 521v-229h230l-230 229z" horiz-adv-x="1083" />
+
+<glyph glyph-name="pen" unicode="&#xe806;" d="M888 576c16-16 16-41 0-57l-74-75-153 153 74 74c16 16 42 16 58 0l95-95z m-721-626v153l450 450 153-152-451-451h-152z" horiz-adv-x="1000" />
+
+<glyph glyph-name="auto_list" unicode="&#xe807;" d="M156 631v-85h334v85h-334z m334-254h-334v85h334v-85z m-334-170h334v85h-334v-85z m0-169h334v84h-334v-84z m750 593h-333v-593h333v593z" horiz-adv-x="1063" />
+</font>
+</defs>
+</svg>
