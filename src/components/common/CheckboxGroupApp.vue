@@ -1,10 +1,6 @@
 <template>
   <el-checkbox-group v-model="model" @change="updateVal" text-color="danger">
-    <el-checkbox
-      v-for="item of items"
-      :key="item.index"
-      :label="item[checkboxLabel]"
-    ></el-checkbox>
+    <el-checkbox v-for="item of items" :key="item.index"></el-checkbox>
   </el-checkbox-group>
 </template>
 
@@ -18,7 +14,6 @@
     },
     props: {
       items: Array,
-      checkboxLabel: String,
     },
     methods: {
       updateVal(val) {

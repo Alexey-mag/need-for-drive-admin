@@ -1,17 +1,14 @@
 <template>
-  <el-form-item :label="label" :prop="propName">
-    <el-input v-model="model" size="medium" :type="type" @input="updateValue"></el-input>
-  </el-form-item>
+  <el-input v-model="model" size="medium" :type="type" :class="inputClass" @input="updateValue"></el-input>
 </template>
 
 <script>
   export default {
     name: "InputApp",
     props: {
-      label: String,
       item: String,
-      propName: String,
       type: String,
+      inputClass: String,
     },
     data() {
       return {
