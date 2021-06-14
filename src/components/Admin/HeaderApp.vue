@@ -37,7 +37,7 @@
 
 <style lang="scss">
   .admin__header {
-    grid-area: 1 / 11 / 4 / 46;
+    grid-area: 1 / 9 / 4 / 46;
     background: white;
     height: $header-height !important;
     display: flex;

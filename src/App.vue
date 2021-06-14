@@ -29,6 +29,7 @@
     },
     methods: {
       ...mapMutations("shared", ["setWindowWidth"]),
+      ...mapMutations("user", ["createBase64Token"]),
       ...mapActions("user", ["refreshToken", "logoutUser"]),
     },
     mounted() {

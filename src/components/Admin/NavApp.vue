@@ -50,12 +50,13 @@
 
 <style lang="scss">
   .admin_nav {
-    grid-area: 1 / 1 / 26 / 11;
+    grid-area: 1 / 1 / 26 / 9;
     z-index: 100;
     box-shadow: 0 1px 75px rgba(90, 97, 105, 0.11), 0 2px 4px rgba(90, 97, 105, 0.12),
       0 7.5px 11px rgba(90, 97, 105, 0.1), 0 3.5px 17.5px rgba(165, 182, 201, 0.1);
     width: 100% !important;
     min-width: 200px;
+    max-width: 100%;
   }
   .el-menu {
     height: calc(100vh - 68px);

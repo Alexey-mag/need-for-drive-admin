@@ -3,13 +3,16 @@
   transform: rotate(90deg);
 }
 .el-button {
-  width: 100px !important;
+  width: 100px;
 }
 .el-form-item__label {
   line-height: 30px !important;
 }
 .el-checkbox__input.is-checked+.el-checkbox__label {
   color: rgba(73, 80, 87, 1);
+}
+.el-checkbox {
+  margin-top: 8px;
 }
 .el-form--label-top .el-form-item__label {
   padding: 0;
@@ -23,4 +26,28 @@
 }
 .el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before {
   content: '';
+}
+.el-upload-list--picture-card .el-upload-list__item {
+  width: 245px;
+  height: 110px;
+  border: none;
+  margin: 0;
+
+}
+.el-upload--picture-card {
+  background: #FFFFFF;
+  border: 0.5px solid #BECAD6;
+  box-sizing: border-box;
+  border-radius: 4px;
+  height: 40px;
+  width: 100%;
+  position: relative;
+  z-index: 30;
+}
+.el-textarea__inner {
+  border: none;
+  resize: none;
+}
+.el-progress {
+  margin-top: 7px;
 }
