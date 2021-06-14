@@ -60,7 +60,7 @@ export default {
           headers: {
             "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_FACTORY_ID"]}`,
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + localStorage.getItem("token64"),
+            "Authorization": "Bearer " + localStorage.getItem("token"),
           },
           data: {
             name: state.car.name,
