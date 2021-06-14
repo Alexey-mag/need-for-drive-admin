@@ -8,14 +8,12 @@
       <el-card class="homepage__card" shadow="always">
         <el-form label-position="top" ref="form" :model="form" :rules="rules">
           <p class="form__title">Вход</p>
-          <input-app label="Почта" :item="form.email" prop-name="email" @update="updateEmail" />
-          <input-app
-            label="Пароль"
-            :item="form.password"
-            prop-name="password"
-            type="password"
-            @update="updatePassword"
-          />
+          <el-form-item label="Почта" prop="email">
+            <input-app :item="form.email" @update="updateEmail" />
+          </el-form-item>
+          <el-form-item label="Пароль" prop="password">
+            <input-app :item="form.password" type="password" @update="updatePassword" />
+          </el-form-item>
           <div class="form__footer">
             <el-link class="form__footer_anchor" type="primary" @click="clearToken">Запросить доступ</el-link>
             <button-app name="Войти" button-type="primary" @click="submitForm('form')" />
