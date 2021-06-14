@@ -3,7 +3,7 @@
     <el-upload
       ref="upload"
       :auto-upload="false"
-      :on-change="handlePreview"
+      :on-change="setCarImage"
       action="https://jsonplaceholder.typicode.com/posts/"
       accept="image/png, image/jpeg, image/jpg"
       list-type="picture-card"
@@ -22,11 +22,8 @@
       return {};
     },
     methods: {
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(file);
+      setCarImage(file) {
+        this.$emit("update", file);
       },
     },
   };

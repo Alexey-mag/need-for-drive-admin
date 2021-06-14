@@ -1,9 +1,10 @@
 <template>
   <el-select
     v-model="valueOption"
-    multiple
+    :multiple="multiple"
     collapse-tags
     :placeholder="selectLabel"
+    :class="selectClass"
     @change="updateValue"
   >
     <el-option
@@ -23,6 +24,8 @@
       items: Array,
       optionLabel: String,
       optionValue: String,
+      selectClass: String,
+      multiple: Boolean
     },
     data() {
       return {
@@ -30,11 +33,11 @@
       };
     },
     methods: {
-      updateValue(val) {
-        this.$emit("update", val);
+      updateValue() {
+        this.$emit("update", this.valueOption);
       },
     },
   };
 </script>
 
-<style scoped></style>
+<style lang="scss"></style>

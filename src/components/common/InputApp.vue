@@ -9,6 +9,7 @@
       item: String,
       type: String,
       inputClass: String,
+      inputClear: Boolean,
     },
     data() {
       return {
@@ -19,6 +20,12 @@
       updateValue() {
         this.$emit("update", this.model);
       },
+    },
+    updated() {
+      if (this.inputClear) {
+        this.model = "";
+        this.$emit("clear");
+      }
     },
     mounted() {
       this.model = this.item;

@@ -11,6 +11,9 @@
 .el-checkbox__input.is-checked+.el-checkbox__label {
   color: rgba(73, 80, 87, 1);
 }
+.el-checkbox {
+  margin-top: 8px;
+}
 .el-form--label-top .el-form-item__label {
   padding: 0;
 }
