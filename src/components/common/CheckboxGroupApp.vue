@@ -1,5 +1,5 @@
 <template>
-  <el-checkbox-group v-model="model" @change="updateVal" text-color="danger" :class="classProp">
+  <el-checkbox-group v-model="model" @change="updateValue" :class="classProp">
     <el-checkbox v-for="item of items" :key="item.index" :label="item" checked></el-checkbox>
   </el-checkbox-group>
 </template>
@@ -7,17 +7,23 @@
 <script>
   export default {
     name: "CheckboxGroupApp",
-    data() {
-      return {
-        model: [],
-      };
+    computed: {
+      model: {
+        get() {
+          return this.item;
+        },
+        set(val) {
+          this.updateValue(val);
+        },
+      },
     },
     props: {
       items: Array,
+      item: Array,
       classProp: String,
     },
     methods: {
-      updateVal(val) {
+      updateValue(val) {
         this.$emit("update", val);
       },
     },

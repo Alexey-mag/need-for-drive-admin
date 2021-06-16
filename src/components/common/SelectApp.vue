@@ -22,19 +22,25 @@
     props: {
       selectLabel: String,
       items: Array,
+      item: String,
       optionLabel: String,
       optionValue: String,
       selectClass: String,
-      multiple: Boolean
+      multiple: Boolean,
     },
-    data() {
-      return {
-        valueOption: [],
-      };
+    computed: {
+      valueOption: {
+        get() {
+          return this.item;
+        },
+        set(val) {
+          this.updateValue(val);
+        },
+      },
     },
     methods: {
-      updateValue() {
-        this.$emit("update", this.valueOption);
+      updateValue(val) {
+        this.$emit("update", val);
       },
     },
   };

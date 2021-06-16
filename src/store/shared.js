@@ -5,7 +5,7 @@ export default {
     error: null,
     windowWidth: null,
     mobile: 568,
-    tablet: 1023,
+    tablet: 1100,
   },
   mutations: {
     setLoading(state, payload) {

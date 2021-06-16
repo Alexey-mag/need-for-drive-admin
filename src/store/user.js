@@ -102,6 +102,10 @@ export default {
         commit("clearUser");
         await router.push({ name: "HomePage" });
       } catch (e) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("tokenCreated");
+        localStorage.removeItem("user");
         this.commit("shared/setError", e.message);
         throw e;
       }

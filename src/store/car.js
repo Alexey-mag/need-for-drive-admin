@@ -18,10 +18,6 @@ export default {
     setCarCategory(state, payload) {
       state.carCategory = payload;
     },
-    // setImage(state, payload) {
-    //   state.car.thumbnail = payload.raw
-    //   state.car.thumbnail.path = payload.url
-    // }
   },
   actions: {
     async fetchCarCategory({ commit }) {

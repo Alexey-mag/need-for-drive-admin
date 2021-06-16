@@ -10,6 +10,7 @@
       :limit="1"
       class="dropdown__input"
     >
+      <div class="dropdown__image_name">{{ imgName }}</div>
       <el-button slot="trigger" type="default" plain class="dropdown__button">Обзор</el-button>
     </el-upload>
   </div>
@@ -19,10 +20,13 @@
   export default {
     name: "DropdownApp",
     data() {
-      return {};
+      return {
+        imgName: "",
+      };
     },
     methods: {
       setCarImage(file) {
+        this.imgName = file.name;
         this.$emit("update", file);
       },
     },
@@ -32,6 +36,14 @@
 <style lang="scss">
   .dropdown__input {
     margin-bottom: 22px;
+  }
+  .dropdown__image_name {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    z-index: 50;
+    width: 170px;
+    overflow: hidden;
   }
   .dropdown__input:hover {
     .dropdown__button {
