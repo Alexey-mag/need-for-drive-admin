@@ -43,6 +43,7 @@
     display: flex;
     flex-wrap: wrap;
     flex-flow: row;
+    z-index: 100;
   }
   .header__search {
     display: flex;

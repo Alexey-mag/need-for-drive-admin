@@ -18,7 +18,7 @@
 
 <style lang="scss">
   .admin__footer {
-    grid-area: 23 / 11 / 26 / 46;
+    grid-area: 23 / 9 / 26 / 46;
     background: white;
     height: $header-height !important;
     display: flex;

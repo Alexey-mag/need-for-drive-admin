@@ -5,27 +5,26 @@
 <script>
   export default {
     name: "InputApp",
-    props: {
-      item: String,
-      type: String,
-      inputClass: String,
-      inputClear: Boolean,
-    },
-    data() {
-      return {
-        model: "",
-      };
-    },
-    methods: {
-      updateValue() {
-        this.$emit("update", this.model);
+    props: ["item", "inputClass", "type"],
+    //         {
+    //   item: String || Number,
+    //   type: String,
+    //   inputClass: String,
+    // },
+    computed: {
+      model: {
+        get() {
+          return this.item;
+        },
+        set(val) {
+          this.updateValue(val);
+        },
       },
     },
-    updated() {
-      if (this.inputClear) {
-        this.model = "";
-        this.$emit("clear");
-      }
+    methods: {
+      updateValue(val) {
+        this.$emit("update", val);
+      },
     },
     mounted() {
       this.model = this.item;
