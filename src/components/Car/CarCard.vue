@@ -72,8 +72,13 @@
         </div>
         <div class="large__card_footer">
           <div class="card_footer_confirm">
-            <button-app button-type="primary" name="Сохранить" @click="submitForm('formCar')" />
-            <button-app button-type="default" name="Отменить" @click="clearForm('formCar')" />
+            <button-app
+              button-type="primary"
+              button-class="card_footer_confirm_button"
+              name="Сохранить"
+              @click="submitForm('formCar')"
+            />
+            <button-app button-type="info" name="Отменить" @click="clearForm('formCar')" />
           </div>
           <div class="card_footer_cancel">
             <button-app button-type="danger" name="Удалить" />
@@ -88,7 +93,7 @@
   import DropdownApp from "@/components/common/DropdownApp";
   import InputApp from "@/components/common/InputApp";
   import CheckboxGroupApp from "@/components/common/CheckboxGroupApp";
-  import { mapActions, mapGetters } from "vuex";
+  import { mapActions, mapGetters, mapMutations } from "vuex";
   import SelectApp from "../common/SelectApp";
   import ButtonApp from "../common/ButtonApp";
 
@@ -116,7 +121,7 @@
       return {
         formCar: {
           carDescription: "",
-          carModel: "",
+          carModel: this.compCarModel,
           thumbnail: {},
           carCategory: "",
           priceMin: null,
@@ -146,7 +151,15 @@
       };
     },
     computed: {
-      ...mapGetters("car", ["getCarCategory"]),
+      ...mapGetters("car", ["getCarCategory", "getCarModel"]),
+      compCarModel: {
+        get() {
+          return this.getCarModel;
+        },
+        set(val) {
+          this.setCarModel(val);
+        },
+      },
       percentageLoader() {
         let validatedFields = 0;
         const percent = Object.values(this.percentage);
@@ -161,6 +174,7 @@
     },
     methods: {
       ...mapActions("car", ["fetchCarCategory", "postCar"]),
+      ...mapMutations("car", ["setCarModel"]),
       setCarModel(model) {
         this.formCar.carModel = model;
         this.percentage.carModel = this.formCar.carModel !== "";
@@ -211,7 +225,6 @@
               categoryId: this.formCar.carCategory,
               thumbnail: this.formCar.thumbnail,
             };
-            console.log(car);
             this.postCar(car);
             this.$message.success("Успех! Машина сохранена.");
           } else {
@@ -270,6 +283,7 @@
     height: 550px;
     margin-top: 90px;
     margin-right: 20px;
+    border-radius: 9px;
   }
   .car__large_card {
     display: flex;
@@ -279,6 +293,7 @@
     width: 700px;
     height: 860px;
     min-width: 500px;
+    border-radius: 9px;
   }
   .car__title {
     position: absolute;
@@ -411,6 +426,9 @@
   .car__column {
     display: flex;
     flex-flow: column;
+  }
+  .card_footer_confirm_button {
+    margin-right: 7px;
   }
 
   // --------------------------------1100------------------------------------

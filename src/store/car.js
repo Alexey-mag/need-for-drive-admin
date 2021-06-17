@@ -18,6 +18,9 @@ export default {
     setCarCategory(state, payload) {
       state.carCategory = payload;
     },
+    setCarModel(state, payload) {
+      state.car.name = payload;
+    },
   },
   actions: {
     async fetchCarCategory({ commit }) {
@@ -79,6 +82,9 @@ export default {
   getters: {
     getCarCategory(state) {
       return state.carCategory;
+    },
+    getCarModel(state) {
+      return state.car.name;
     },
   },
 };

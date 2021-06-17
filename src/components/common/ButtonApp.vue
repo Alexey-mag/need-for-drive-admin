@@ -1,7 +1,5 @@
 <template>
-  <el-button size="small" :type="buttonType" @click="doAction">{{
-    name
-  }}</el-button>
+  <el-button size="small" :type="buttonType" :class="buttonClass" @click="doAction">{{ name }}</el-button>
 </template>
 
 <script>
@@ -10,6 +8,7 @@
     props: {
       name: String,
       buttonType: String,
+      buttonClass: String,
     },
     methods: {
       doAction() {
