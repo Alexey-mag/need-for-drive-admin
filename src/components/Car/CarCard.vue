@@ -207,10 +207,11 @@
               description: this.formCar.carDescription,
               priceMin: this.formCar.priceMin,
               priceMax: this.formCar.priceMax,
-              colors: this.formCar.selectedColors.length > 0 ? this.selectedColors : this.carColors,
+              colors: this.formCar.selectedColors.length > 0 ? this.formCar.selectedColors : this.formCar.carColors,
               categoryId: this.formCar.carCategory,
               thumbnail: this.formCar.thumbnail,
             };
+            console.log(car);
             this.postCar(car);
             this.$message.success("Успех! Машина сохранена.");
           } else {
