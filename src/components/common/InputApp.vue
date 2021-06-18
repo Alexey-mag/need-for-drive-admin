@@ -6,11 +6,6 @@
   export default {
     name: "InputApp",
     props: ["item", "inputClass", "type"],
-    //         {
-    //   item: String || Number,
-    //   type: String,
-    //   inputClass: String,
-    // },
     computed: {
       model: {
         get() {

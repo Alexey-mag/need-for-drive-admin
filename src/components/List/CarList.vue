@@ -47,6 +47,7 @@
         layout="prev, pager, next"
         :total="getRowCount"
         @current-change="setCurrentPage"
+        :current-page.sync="compPage"
       >
       </el-pagination>
     </el-card>
@@ -62,13 +63,24 @@
     name: "CarList",
     components: { ButtonApp, SelectApp },
     computed: {
-      ...mapGetters("cars", ["getCars", "getOnePageCars", "getRowCount", "getPageSize"]),
+      ...mapGetters("cars", ["getCars", "getOnePageCars", "getRowCount", "getPageSize", "getPage"]),
+      ...mapGetters("car", ["getCar"]),
+      compPage: {
+        get() {
+          return this.getPage + 1;
+        },
+        set(val) {
+          this.setCurrentPage(val);
+        },
+      },
     },
     methods: {
       ...mapActions("cars", ["fetchCars", "fetchPaginationCars"]),
       ...mapMutations("cars", ["setPage"]),
-      editCar(row) {
-        console.log(row);
+      ...mapMutations("car", ["setCar"]),
+      async editCar(row) {
+        await this.setCar(row);
+        await this.$router.push({ name: "Car" });
       },
       deleteCar(row) {
         console.log(row);
@@ -80,6 +92,7 @@
       },
       applyFilters() {
         console.log("apply");
+        console.log(this.getPage);
       },
       resetFilters() {
         console.log("reset");

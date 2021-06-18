@@ -7,19 +7,23 @@
 <script>
   export default {
     name: "CheckboxGroupApp",
-    computed: {
-      model: {
-        get() {
-          return this.item;
-        },
-        set(val) {
-          this.updateValue(val);
-        },
-      },
+    data() {
+      return {
+        model: [],
+      };
     },
+    // computed: {
+    //   model: {
+    //     get() {
+    //       return this.item;
+    //     },
+    //     set(val) {
+    //       this.updateValue(val);
+    //     },
+    //   },
+    // },
     props: {
       items: Array,
-      item: Array,
       classProp: String,
     },
     methods: {

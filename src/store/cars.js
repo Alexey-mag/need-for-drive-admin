@@ -7,7 +7,7 @@ export default {
     onePageCars: [],
     page: 0,
     pageSize: 8,
-    rowsLimit: 7,
+    rowsLimit: 8,
     rowCount: null,
     fields: [],
   },
@@ -88,11 +88,11 @@ export default {
     getRowCount(state) {
       return state.rowCount;
     },
-    getTableFields(state) {
-      return state.fields;
-    },
     getPageSize(state) {
       return state.pageSize;
+    },
+    getPage(state) {
+      return state.page;
     },
   },
 };

@@ -3,10 +3,12 @@
     <h1 class="car__title">Карточка Автомобиля</h1>
     <el-form label-position="top" ref="formCar" :model="formCar" :rules="rules" class="car__card_form">
       <el-card class="car__small_card">
-        <p class="card__car_model">{{ formCar.carModel }}</p>
+        <img v-if="compCarId" :src="imgPath()" class="car__img" />
+        <img v-else :src="compThumbnail.path" class="car__img" />
+        <p class="card__car_model">{{ compCarModel }}</p>
         <p class="card__car_category" v-if="formCar.carCategory">{{ formCar.carCategory }}</p>
         <el-form-item prop="thumbnail">
-          <dropdown-app @update="setImage" />
+          <input type="file" size="medium" @change="setImage" accept="image/png, image/jpeg, image/jpg" />
         </el-form-item>
         <div class="car__progress">
           <p class="car__progress_title">Заполнено</p>
@@ -14,7 +16,7 @@
         </div>
         <div class="car__description">
           <el-form-item label="Описание" prop="carDescription">
-            <el-input type="textarea" :rows="4" v-model="formCar.carDescription" @input="testCarDescription"></el-input>
+            <el-input type="textarea" :rows="4" v-model="compCarDescription" @input="testCarDescription"></el-input>
           </el-form-item>
         </div>
       </el-card>
@@ -23,7 +25,7 @@
         <div class="large__card_block1">
           <div class="card__input_block">
             <el-form-item label="Модель автомобиля" prop="carModel">
-              <input-app :item="formCar.carModel" input-class="car__input" @update="setCarModel" />
+              <input-app :item="compCarModel" input-class="car__input" @update="setCarModel" />
             </el-form-item>
           </div>
           <div class="card__input_block">
@@ -54,21 +56,22 @@
             </div>
           </div>
           <el-form-item prop="carColors">
-            <checkbox-group-app
-              :items="formCar.carColors"
-              :item="formCar.selectedColors"
-              @update="setSelectedColors"
-              class-prop="car__card__checkbox"
-            />
+            <checkbox-group-app :items="compCarColors" @update="setSelectedColors" class-prop="car__card__checkbox" />
           </el-form-item>
           <div class="car__input__price_block">
             <el-form-item label="Цена от" prop="priceMin">
-              <input-app :item="formCar.priceMin" input-class="car__input_price" type="number" @update="setPriceMin" />
+              <input-app :item="compPriceMin" input-class="car__input_price" type="number" @update="setPriceMin" />
             </el-form-item>
             <el-form-item label="Цена до" prop="priceMax">
-              <input-app :item="formCar.priceMax" input-class="car__input_price" type="number" @update="setPriceMax" />
+              <input-app :item="compPriceMax" input-class="car__input_price" type="number" @update="setPriceMax" />
             </el-form-item>
           </div>
+          <el-form-item label="Номер" prop="carNumber">
+            <input-app :item="compCarNumber" input-class="car__input_price" @update="setFromCarNumber" />
+          </el-form-item>
+          <el-form-item label="Бензин" prop="tank">
+            <input-app :item="compCarTank" input-class="car__input_price" type="number" @update="setFormCarTank" />
+          </el-form-item>
         </div>
         <div class="large__card_footer">
           <div class="card_footer_confirm">
@@ -90,7 +93,6 @@
 </template>
 
 <script>
-  import DropdownApp from "@/components/common/DropdownApp";
   import InputApp from "@/components/common/InputApp";
   import CheckboxGroupApp from "@/components/common/CheckboxGroupApp";
   import { mapActions, mapGetters, mapMutations } from "vuex";
@@ -99,20 +101,27 @@
 
   export default {
     name: "CarCard",
-    components: { ButtonApp, SelectApp, CheckboxGroupApp, DropdownApp, InputApp },
+    components: { ButtonApp, SelectApp, CheckboxGroupApp, InputApp },
     data() {
+      const checkTank = (rule, value, callback) => {
+        if (value < 0 || value > 100) {
+          callback(new Error("Кол-во бензина должно быть от 0 до 100"));
+        } else {
+          callback();
+        }
+      };
       const checkPrice = (rule, value, callback) => {
         if (!value) {
           return callback(new Error("Пожалуйста, введите цену автомобиля"));
         }
-        if (value <= 0) {
+        if (value < 0) {
           callback(new Error("Цена должна быть положительным числом больше 0"));
         } else {
           callback();
         }
       };
       const checkThumbnail = (rule, value, callback) => {
-        if (Object.keys(value).length === 0) {
+        if (typeof value === undefined) {
           return callback(new Error("Пожалуйста, загрузите изображение автомобиля"));
         } else {
           callback();
@@ -120,13 +129,16 @@
       };
       return {
         formCar: {
-          carDescription: "",
+          id: this.compCarId,
+          carNumber: this.compCarNumber,
+          tank: this.compCarTank,
+          carDescription: this.compCarDescription,
           carModel: this.compCarModel,
-          thumbnail: {},
+          thumbnail: this.compThumbnail,
           carCategory: "",
-          priceMin: null,
-          priceMax: null,
-          carColors: [],
+          priceMin: this.compPriceMin,
+          priceMax: this.compPriceMax,
+          carColors: this.compCarColors,
           selectedColors: [],
         },
         rules: {
@@ -135,7 +147,9 @@
           priceMin: [{ validator: checkPrice, trigger: "blur" }],
           priceMax: [{ validator: checkPrice, trigger: "blur" }],
           thumbnail: [{ validator: checkThumbnail, trigger: "blur" }],
+          tank: [{ validator: checkTank, trigger: "blur" }],
           carCategory: [{ required: true, message: "Пожалуйста, выберите категорию автомобиля", trigger: "blur" }],
+          carNumber: [{ max: 6, message: "Длина номера не должна превышать 6 символов", trigger: "blur" }],
         },
         color: "",
         clear: false,
@@ -151,13 +165,89 @@
       };
     },
     computed: {
-      ...mapGetters("car", ["getCarCategory", "getCarModel"]),
-      compCarModel: {
+      ...mapGetters("car", [
+        "getCarCategory",
+        "getCarName",
+        "getCarPriceMin",
+        "getCarPriceMax",
+        "getCarDescription",
+        "getCarCategoryId",
+        "getCarColors",
+        "getCarThumbnail",
+        "getCarId",
+        "getCarNumber",
+        "getCarTank",
+      ]),
+      compCarNumber: {
         get() {
-          return this.getCarModel;
+          return this.getCarNumber;
         },
         set(val) {
-          this.setCarModel(val);
+          this.setCarNumber(val);
+        },
+      },
+      compCarId: {
+        get() {
+          return this.getCarId;
+        },
+        set(val) {
+          this.setCarId(val);
+        },
+      },
+      compCarModel: {
+        get() {
+          return this.getCarName;
+        },
+        set(val) {
+          this.setCarName(val);
+        },
+      },
+      compCarDescription: {
+        get() {
+          return this.getCarDescription;
+        },
+        set(val) {
+          this.setCarDescription(val);
+        },
+      },
+      compThumbnail: {
+        get() {
+          return this.getCarThumbnail;
+        },
+        set(val) {
+          this.setCarThumbnail(val);
+        },
+      },
+      compPriceMin: {
+        get() {
+          return this.getCarPriceMin;
+        },
+        set(val) {
+          this.setCarPriceMin(val);
+        },
+      },
+      compPriceMax: {
+        get() {
+          return this.getCarPriceMax;
+        },
+        set(val) {
+          this.setCarPriceMax(val);
+        },
+      },
+      compCarColors: {
+        get() {
+          return this.getCarColors;
+        },
+        set(val) {
+          this.setCarColors(val);
+        },
+      },
+      compCarTank: {
+        get() {
+          return this.getCarTank;
+        },
+        set(val) {
+          this.setCarTank(val);
         },
       },
       percentageLoader() {
@@ -174,23 +264,42 @@
     },
     methods: {
       ...mapActions("car", ["fetchCarCategory", "postCar"]),
-      ...mapMutations("car", ["setCarModel"]),
+      ...mapMutations("car", [
+        "setCarName",
+        "setCarPriceMin",
+        "setCarPriceMax",
+        "setCarDescription",
+        "setCarCategoryId",
+        "setCarColors",
+        "setCarThumbnail",
+        "setCarId",
+        "setCarNumber",
+        "setThumbnailPath",
+        "setCarTank",
+      ]),
       setCarModel(model) {
         this.formCar.carModel = model;
-        this.percentage.carModel = this.formCar.carModel !== "";
+        this.percentage.carModel = !!this.formCar.carModel;
       },
       setSelectedColors(colors) {
         this.formCar.selectedColors = colors;
+        this.percentage.carColors = !!colors.length;
       },
       testCarDescription() {
         this.percentage.carDescription = this.formCar.carDescription !== "";
       },
-      setImage(file) {
-        this.formCar.thumbnail.size = file.size;
-        this.formCar.thumbnail.mimetype = file.raw.type;
-        this.formCar.thumbnail.path = file.raw;
-        this.formCar.thumbnail.originalname = file.raw.name;
-        this.percentage.dropdown = true;
+      setImage(event) {
+        const image = event.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = e => {
+          this.compThumbnail = {
+            size: image.size,
+            originalname: image.name,
+            mimetype: image.type,
+            path: e.target.result,
+          };
+        };
       },
       carColor(color) {
         this.color = color;
@@ -198,16 +307,13 @@
       addColor() {
         if (this.color) {
           this.percentage.carColors = true;
-          if (this.formCar.carColors.includes(this.color)) {
-            return this.formCar.carColors;
+          if (this.compCarColors.includes(this.color)) {
+            return this.compCarColors;
           } else {
-            this.formCar.carColors.push(this.color);
+            this.compCarColors.push(this.color);
           }
         }
         this.color = "";
-      },
-      clearOff() {
-        this.clear = false;
       },
       setCategory(val) {
         this.formCar.carCategory = val;
@@ -217,13 +323,15 @@
         this.$refs[formName].validate(valid => {
           if (valid) {
             const car = {
+              id: this.compCarId,
+              number: this.compCarNumber,
               name: this.formCar.carModel,
               description: this.formCar.carDescription,
               priceMin: this.formCar.priceMin,
               priceMax: this.formCar.priceMax,
-              colors: this.formCar.selectedColors.length > 0 ? this.formCar.selectedColors : this.formCar.carColors,
+              colors: this.formCar.selectedColors.length > 0 ? this.formCar.selectedColors : this.compCarColors,
               categoryId: this.formCar.carCategory,
-              thumbnail: this.formCar.thumbnail,
+              thumbnail: this.compThumbnail,
             };
             this.postCar(car);
             this.$message.success("Успех! Машина сохранена.");
@@ -237,6 +345,7 @@
       },
       clearForm(formName) {
         this.$refs[formName].resetFields();
+        this.formCar.carColors = [];
         //TODO отрефакторить!
         this.percentage.dropdown = false;
         this.percentage.carDescription = false;
@@ -248,11 +357,20 @@
       },
       setPriceMin(val) {
         this.formCar.priceMin = Number(val);
-        this.percentage.priceMin = this.formCar.priceMin !== 0;
+        this.percentage.priceMin = !!this.formCar.priceMin;
       },
       setPriceMax(val) {
         this.formCar.priceMax = Number(val);
-        this.percentage.priceMax = this.formCar.priceMax !== 0;
+        this.percentage.priceMax = !!this.formCar.priceMax;
+      },
+      setFromCarNumber(val) {
+        this.formCar.carNumber = val;
+      },
+      setFormCarTank(val) {
+        this.formCar.tank = val;
+      },
+      imgPath() {
+        return `${process.env.VUE_APP_API_IMG}${this.getCarThumbnail.path}`;
       },
     },
     mounted() {
@@ -291,7 +409,8 @@
     position: relative;
     margin-top: 90px;
     width: 700px;
-    height: 860px;
+    height: auto;
+    min-height: 860px;
     min-width: 500px;
     border-radius: 9px;
   }
@@ -423,14 +542,17 @@
     position: absolute;
     bottom: 20px;
   }
-  .car__column {
-    display: flex;
-    flex-flow: column;
-  }
   .card_footer_confirm_button {
     margin-right: 7px;
   }
-
+  .car__img {
+    width: 245px;
+    height: 110px;
+    position: absolute;
+    top: 35px;
+    left: 45px;
+    object-fit: cover;
+  }
   // --------------------------------1100------------------------------------
   @media screen and (max-width: $tablet) {
     .car__card_form {

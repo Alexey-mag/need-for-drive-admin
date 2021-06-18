@@ -26,6 +26,7 @@
     },
     methods: {
       setCarImage(file) {
+        console.log(file);
         this.imgName = file.name;
         this.$emit("update", file);
       },

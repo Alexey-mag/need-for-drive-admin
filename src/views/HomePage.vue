@@ -34,8 +34,8 @@
     data() {
       return {
         form: {
-          email: "intern",
-          password: "intern-S!",
+          email: "",
+          password: "",
         },
         rules: {
           email: [{ required: true, message: "Пожалуйста, введите email", trigger: "blur" }],
