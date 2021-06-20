@@ -1,2 +1,2 @@
 (window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["orders"],{"0764":function(e,r,s){"use strict";s.r(r);var n=function(){var e=this,r=e.$createElement,s=e._self._c||r;return s("div",{staticClass:"orders"},[e._v("Orders")])},t=[],a={name:"Orders"},c=a,o=s("2877"),d=Object(o["a"])(c,n,t,!1,null,"27af1f08",null);r["default"]=d.exports}}]);
-//# sourceMappingURL=orders.18f9b97e.js.map
+//# sourceMappingURL=orders.9ed8629d.js.map
