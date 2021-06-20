@@ -4,58 +4,30 @@ export default {
   namespaced: true,
   state: {
     car: {
-      id: null,
-      priceMin: null,
-      priceMax: null,
+      id: '',
+      priceMin: 0,
+      priceMax: 0,
       name: "",
       number: "",
-      tank: null,
+      tank: 0,
       description: "",
       categoryId: {},
       colors: [],
       thumbnail: {},
     },
+    isNewCar: false,
     carCategory: null,
   },
   mutations: {
     setCar(state, payload) {
       state.car = payload;
+      state.isNewCar = true
+    },
+    setNewCar(state, payload) {
+      state.isNewCar = payload
     },
     setCarCategory(state, payload) {
       state.carCategory = payload;
-    },
-    setCarName(state, payload) {
-      state.car.name = payload;
-    },
-    setCarNumber(state, payload) {
-      state.car.number = payload;
-    },
-    setCarId(state, payload) {
-      state.car.id = payload;
-    },
-    setCarPriceMin(state, payload) {
-      state.car.priceMin = payload;
-    },
-    setCarPriceMax(state, payload) {
-      state.car.priceMax = payload;
-    },
-    setCarDescription(state, payload) {
-      state.car.description = payload;
-    },
-    setCarCategoryId(state, payload) {
-      state.car.categoryId = payload;
-    },
-    setCarColors(state, payload) {
-      state.car.colors = payload;
-    },
-    setCarThumbnail(state, payload) {
-      state.car.thumbnail = payload;
-    },
-    setThumbnailPath(state, payload) {
-      state.car.thumbnail.path = payload;
-    },
-    setCarTank(state, payload) {
-      state.car.tank = payload;
     },
   },
   actions: {
@@ -88,10 +60,19 @@ export default {
       });
       state.car = payload;
       state.car.categoryId = catObj;
+      let method
+      let url
+       if (state.car.id) {
+         method = 'put'
+         url = process.env.VUE_APP_API_PROD + "/car/" + state.car.id
+       } else {
+         method = 'post'
+         url =process.env.VUE_APP_API_PROD + "/car/"
+       }
       try {
         await axios({
-          url: process.env.VUE_APP_API_PROD + "/car/",
-          method: "post",
+          url: url,
+          method: method,
           headers: {
             "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_FACTORY_ID"]}`,
             "Content-Type": "application/json",
@@ -107,7 +88,8 @@ export default {
             priceMax: state.car.priceMax,
             categoryId: state.car.categoryId,
             thumbnail: state.car.thumbnail,
-          },
+            tank: state.car.tank
+          }
         });
         this.commit("shared/setLoading", false);
       } catch (e) {
@@ -116,43 +98,37 @@ export default {
         throw e;
       }
     },
+    async deleteCar({state}, payload) {
+      this.commit("shared/clearError");
+      this.commit("shared/setLoading", true);
+      state.car = payload;
+      try {
+        await axios({
+          url: process.env.VUE_APP_API_PROD + "/car/" + state.car.id,
+          method: 'delete',
+          headers: {
+            "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_FACTORY_ID"]}`,
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        this.commit("shared/setLoading", false);
+      } catch (e) {
+        this.commit("shared/setLoading", false);
+        this.commit("shared/setError", e.message);
+        throw e;
+      }
+    }
   },
   getters: {
     getCar(state) {
       return state.car;
     },
+    isNewCar(state) {
+      return state.isNewCar
+    },
     getCarCategory(state) {
       return state.carCategory;
-    },
-    getCarName(state) {
-      return state.car.name;
-    },
-    getCarId(state) {
-      return state.car.id;
-    },
-    getCarPriceMin(state) {
-      return state.car.priceMin;
-    },
-    getCarPriceMax(state) {
-      return state.car.priceMax;
-    },
-    getCarDescription(state) {
-      return state.car.description;
-    },
-    getCarCategoryId(state) {
-      return state.car.categoryId;
-    },
-    getCarColors(state) {
-      return state.car.colors;
-    },
-    getCarThumbnail(state) {
-      return state.car.thumbnail;
-    },
-    getCarNumber(state) {
-      return state.car.number;
-    },
-    getCarTank(state) {
-      return state.car.tank;
     },
   },
 };

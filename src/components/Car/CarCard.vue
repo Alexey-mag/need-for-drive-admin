@@ -3,10 +3,10 @@
     <h1 class="car__title">Карточка Автомобиля</h1>
     <el-form label-position="top" ref="formCar" :model="formCar" :rules="rules" class="car__card_form">
       <el-card class="car__small_card">
-        <img v-if="compCarId" :src="imgPath()" class="car__img" />
-        <img v-else :src="compThumbnail.path" class="car__img" />
-        <p class="card__car_model">{{ compCarModel }}</p>
-        <p class="card__car_category" v-if="formCar.carCategory">{{ formCar.carCategory }}</p>
+        <img v-if="formCar.id" :src="imgPath()" class="car__img" />
+        <img v-else :src="formCar.thumbnail.path" class="car__img" />
+        <p class="card__car_model">{{ formCar.name }}</p>
+        <p class="card__car_category">{{ formCar.categoryId }}</p>
         <el-form-item prop="thumbnail">
           <input type="file" size="medium" @change="setImage" accept="image/png, image/jpeg, image/jpg" />
         </el-form-item>
@@ -15,8 +15,8 @@
           <el-progress :percentage="percentageLoader"></el-progress>
         </div>
         <div class="car__description">
-          <el-form-item label="Описание" prop="carDescription">
-            <el-input type="textarea" :rows="4" v-model="compCarDescription" @input="testCarDescription"></el-input>
+          <el-form-item label="Описание" prop="description">
+            <el-input type="textarea" :rows="4" v-model="formCar.description"></el-input>
           </el-form-item>
         </div>
       </el-card>
@@ -24,17 +24,17 @@
         ><div class="large__card_title">Настройки автомобиля</div>
         <div class="large__card_block1">
           <div class="card__input_block">
-            <el-form-item label="Модель автомобиля" prop="carModel">
-              <input-app :item="compCarModel" input-class="car__input" @update="setCarModel" />
+            <el-form-item label="Модель автомобиля" prop="name">
+              <input-app :item="formCar.name" input-class="car__input" @update="setFormCarModel" />
             </el-form-item>
           </div>
           <div class="card__input_block">
-            <el-form-item label="Тип автомобиля" prop="carCategory">
+            <el-form-item label="Тип автомобиля" prop="categoryId">
               <select-app
                 v-if="getCarCategory"
                 select-class="car__input"
                 :items="getCarCategory"
-                :item="formCar.carCategory"
+                :item="formCar.categoryId"
                 option-label="name"
                 option-value="name"
                 :multiple="false"
@@ -55,22 +55,22 @@
               ></el-button>
             </div>
           </div>
-          <el-form-item prop="carColors">
-            <checkbox-group-app :items="compCarColors" @update="setSelectedColors" class-prop="car__card__checkbox" />
+          <el-form-item prop="colors">
+            <checkbox-group-app :items="formCar.colors" @update="setSelectedColors" class-prop="car__card__checkbox" />
           </el-form-item>
           <div class="car__input__price_block">
             <el-form-item label="Цена от" prop="priceMin">
-              <input-app :item="compPriceMin" input-class="car__input_price" type="number" @update="setPriceMin" />
+              <input-app :item="formCar.priceMin" input-class="car__input_price" type="number" @update="setPriceMin" />
             </el-form-item>
             <el-form-item label="Цена до" prop="priceMax">
-              <input-app :item="compPriceMax" input-class="car__input_price" type="number" @update="setPriceMax" />
+              <input-app :item="formCar.priceMax" input-class="car__input_price" type="number" @update="setPriceMax" />
             </el-form-item>
           </div>
-          <el-form-item label="Номер" prop="carNumber">
-            <input-app :item="compCarNumber" input-class="car__input_price" @update="setFromCarNumber" />
+          <el-form-item label="Номер" prop="number">
+            <input-app :item="formCar.number" input-class="car__input_price" @update="setFormCarNumber" />
           </el-form-item>
           <el-form-item label="Бензин" prop="tank">
-            <input-app :item="compCarTank" input-class="car__input_price" type="number" @update="setFormCarTank" />
+            <input-app :item="formCar.tank" input-class="car__input_price" type="number" @update="setFormCarTank" />
           </el-form-item>
         </div>
         <div class="large__card_footer">
@@ -84,7 +84,7 @@
             <button-app button-type="info" name="Отменить" @click="clearForm('formCar')" />
           </div>
           <div class="card_footer_cancel">
-            <button-app button-type="danger" name="Удалить" />
+            <button-app button-type="danger" name="Удалить" @click="deleteSelectedCar" />
           </div>
         </div>
       </el-card>
@@ -121,7 +121,7 @@
         }
       };
       const checkThumbnail = (rule, value, callback) => {
-        if (typeof value === undefined) {
+        if (value.path === undefined) {
           return callback(new Error("Пожалуйста, загрузите изображение автомобиля"));
         } else {
           callback();
@@ -129,171 +129,73 @@
       };
       return {
         formCar: {
-          id: this.compCarId,
-          carNumber: this.compCarNumber,
-          tank: this.compCarTank,
-          carDescription: this.compCarDescription,
-          carModel: this.compCarModel,
-          thumbnail: this.compThumbnail,
-          carCategory: "",
-          priceMin: this.compPriceMin,
-          priceMax: this.compPriceMax,
-          carColors: this.compCarColors,
+          id: "",
+          number: "",
+          tank: 0,
+          description: "",
+          name: "",
+          thumbnail: {},
+          categoryId: "",
+          priceMin: 0,
+          priceMax: 0,
+          colors: [],
           selectedColors: [],
         },
         rules: {
-          carModel: [{ required: true, message: "Пожалуйста, введите модель автомобиля", trigger: "blur" }],
-          carDescription: [{ required: true, message: "Пожалуйста, введите описание автомобиля", trigger: "blur" }],
+          name: [{ required: true, message: "Пожалуйста, введите модель автомобиля", trigger: "blur" }],
+          description: [{ required: true, message: "Пожалуйста, введите описание автомобиля", trigger: "blur" }],
           priceMin: [{ validator: checkPrice, trigger: "blur" }],
           priceMax: [{ validator: checkPrice, trigger: "blur" }],
           thumbnail: [{ validator: checkThumbnail, trigger: "blur" }],
           tank: [{ validator: checkTank, trigger: "blur" }],
-          carCategory: [{ required: true, message: "Пожалуйста, выберите категорию автомобиля", trigger: "blur" }],
-          carNumber: [{ max: 6, message: "Длина номера не должна превышать 6 символов", trigger: "blur" }],
+          categoryId: [{ required: true, message: "Пожалуйста, выберите категорию автомобиля", trigger: "blur" }],
+          number: [{ max: 6, message: "Длина номера не должна превышать 6 символов", trigger: "blur" }],
         },
         color: "",
-        clear: false,
-        percentage: {
-          dropdown: false,
-          carDescription: false,
-          carModel: false,
-          carCategory: false,
-          carColors: false,
-          priceMin: false,
-          priceMax: false,
-        },
       };
     },
     computed: {
-      ...mapGetters("car", [
-        "getCarCategory",
-        "getCarName",
-        "getCarPriceMin",
-        "getCarPriceMax",
-        "getCarDescription",
-        "getCarCategoryId",
-        "getCarColors",
-        "getCarThumbnail",
-        "getCarId",
-        "getCarNumber",
-        "getCarTank",
-      ]),
-      compCarNumber: {
-        get() {
-          return this.getCarNumber;
-        },
-        set(val) {
-          this.setCarNumber(val);
-        },
-      },
-      compCarId: {
-        get() {
-          return this.getCarId;
-        },
-        set(val) {
-          this.setCarId(val);
-        },
-      },
-      compCarModel: {
-        get() {
-          return this.getCarName;
-        },
-        set(val) {
-          this.setCarName(val);
-        },
-      },
-      compCarDescription: {
-        get() {
-          return this.getCarDescription;
-        },
-        set(val) {
-          this.setCarDescription(val);
-        },
-      },
-      compThumbnail: {
-        get() {
-          return this.getCarThumbnail;
-        },
-        set(val) {
-          this.setCarThumbnail(val);
-        },
-      },
-      compPriceMin: {
-        get() {
-          return this.getCarPriceMin;
-        },
-        set(val) {
-          this.setCarPriceMin(val);
-        },
-      },
-      compPriceMax: {
-        get() {
-          return this.getCarPriceMax;
-        },
-        set(val) {
-          this.setCarPriceMax(val);
-        },
-      },
-      compCarColors: {
-        get() {
-          return this.getCarColors;
-        },
-        set(val) {
-          this.setCarColors(val);
-        },
-      },
-      compCarTank: {
-        get() {
-          return this.getCarTank;
-        },
-        set(val) {
-          this.setCarTank(val);
-        },
-      },
+      ...mapGetters("car", ["getCarCategory", "getCar", "isNewCar"]),
       percentageLoader() {
+        let fieldsToValidate;
         let validatedFields = 0;
-        const percent = Object.values(this.percentage);
+        let colors = 0;
+        this.formCar.id ? (fieldsToValidate = 10) : (fieldsToValidate = 9);
+        const percent = Object.values(this.formCar);
         percent.forEach(el => {
-          if (el === true) {
-            validatedFields += 1;
+          if (typeof el === "string") {
+            el === "" ? (validatedFields += 0) : (validatedFields += 1);
+          }
+          if (typeof el === "number") {
+            el <= 0 ? (validatedFields += 0) : (validatedFields += 1);
+          }
+          if (typeof el === "object") {
+            if (el.length && el.length !== 0) {
+              colors = 1;
+            }
+            el.path ? (validatedFields += 1) : (validatedFields += 0);
           }
         });
-        const result = (100 / 7) * validatedFields;
+        validatedFields += colors;
+        const result = (validatedFields / fieldsToValidate) * 100;
         return Math.ceil(result);
       },
     },
     methods: {
-      ...mapActions("car", ["fetchCarCategory", "postCar"]),
-      ...mapMutations("car", [
-        "setCarName",
-        "setCarPriceMin",
-        "setCarPriceMax",
-        "setCarDescription",
-        "setCarCategoryId",
-        "setCarColors",
-        "setCarThumbnail",
-        "setCarId",
-        "setCarNumber",
-        "setThumbnailPath",
-        "setCarTank",
-      ]),
-      setCarModel(model) {
-        this.formCar.carModel = model;
-        this.percentage.carModel = !!this.formCar.carModel;
+      ...mapActions("car", ["fetchCarCategory", "postCar", 'deleteCar']),
+      ...mapMutations("car", ["setNewCar"]),
+      setFormCarModel(val) {
+        this.formCar.name = val;
       },
       setSelectedColors(colors) {
         this.formCar.selectedColors = colors;
-        this.percentage.carColors = !!colors.length;
-      },
-      testCarDescription() {
-        this.percentage.carDescription = this.formCar.carDescription !== "";
       },
       setImage(event) {
         const image = event.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(image);
         reader.onload = e => {
-          this.compThumbnail = {
+          this.formCar.thumbnail = {
             size: image.size,
             originalname: image.name,
             mimetype: image.type,
@@ -306,34 +208,27 @@
       },
       addColor() {
         if (this.color) {
-          this.percentage.carColors = true;
-          if (this.compCarColors.includes(this.color)) {
-            return this.compCarColors;
+          if (this.formCar.colors.includes(this.color)) {
+            return this.formCar.colors;
           } else {
-            this.compCarColors.push(this.color);
+            this.formCar.colors.push(this.color);
           }
         }
         this.color = "";
       },
       setCategory(val) {
-        this.formCar.carCategory = val;
-        this.percentage.carCategory = this.formCar.carCategory !== "";
+        this.formCar.categoryId = val;
       },
       submitForm(formName) {
         this.$refs[formName].validate(valid => {
           if (valid) {
-            const car = {
-              id: this.compCarId,
-              number: this.compCarNumber,
-              name: this.formCar.carModel,
-              description: this.formCar.carDescription,
-              priceMin: this.formCar.priceMin,
-              priceMax: this.formCar.priceMax,
-              colors: this.formCar.selectedColors.length > 0 ? this.formCar.selectedColors : this.compCarColors,
-              categoryId: this.formCar.carCategory,
-              thumbnail: this.compThumbnail,
-            };
-            this.postCar(car);
+            if (this.formCar.selectedColors.length === 0) {
+              delete this.formCar.selectedColors;
+            } else {
+              this.formCar.colors = this.formCar.selectedColors;
+              delete this.formCar.selectedColors;
+            }
+            this.postCar(this.formCar);
             this.$message.success("Успех! Машина сохранена.");
           } else {
             this.$notify.error({
@@ -345,33 +240,57 @@
       },
       clearForm(formName) {
         this.$refs[formName].resetFields();
-        this.formCar.carColors = [];
-        //TODO отрефакторить!
-        this.percentage.dropdown = false;
-        this.percentage.carDescription = false;
-        this.percentage.carCategory = false;
-        this.percentage.carColors = false;
-        this.percentage.carModel = false;
-        this.percentage.priceMax = false;
-        this.percentage.priceMin = false;
+      },
+      deleteSelectedCar() {
+          this.$confirm('Вы точно хотите удалить выбранную машину?', 'Внимание', {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Отмена',
+            type: 'warning'
+          }).then(() => {
+            this.deleteCar(this.formCar)
+            this.$message({
+              type: 'success',
+              message: 'Машина удалена'
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: 'Удаление отменено'
+            });
+          });
       },
       setPriceMin(val) {
         this.formCar.priceMin = Number(val);
-        this.percentage.priceMin = !!this.formCar.priceMin;
       },
       setPriceMax(val) {
         this.formCar.priceMax = Number(val);
-        this.percentage.priceMax = !!this.formCar.priceMax;
       },
-      setFromCarNumber(val) {
-        this.formCar.carNumber = val;
+      setFormCarNumber(val) {
+        this.formCar.number = val;
       },
       setFormCarTank(val) {
-        this.formCar.tank = val;
+        this.formCar.tank = Number(val);
       },
       imgPath() {
-        return `${process.env.VUE_APP_API_IMG}${this.getCarThumbnail.path}`;
+        return `${process.env.VUE_APP_API_IMG}${this.formCar.thumbnail.path}`;
       },
+    },
+    updated() {
+      if (this.isNewCar) {
+        this.formCar.name = this.getCar.name;
+        this.formCar.description = this.getCar.description;
+        this.formCar.id = this.getCar.id;
+        this.formCar.number = this.getCar.number;
+        this.formCar.name = this.getCar.name;
+        this.formCar.priceMin = this.getCar.priceMin;
+        this.formCar.priceMax = this.getCar.priceMax;
+        this.formCar.priceMax = this.getCar.priceMax;
+        this.formCar.thumbnail = this.getCar.thumbnail;
+        this.formCar.categoryId = this.getCar.categoryId.name;
+        this.formCar.colors = this.getCar.colors;
+        this.formCar.tank = this.getCar.tank;
+        this.setNewCar(false);
+      }
     },
     mounted() {
       this.fetchCarCategory();

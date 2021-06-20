@@ -23,6 +23,7 @@
         </div>
       </div>
       <el-table
+              v-loading="loading"
         ref="cars"
         v-if="getOnePageCars.length"
         :data="getOnePageCars"
@@ -65,6 +66,7 @@
     computed: {
       ...mapGetters("cars", ["getCars", "getOnePageCars", "getRowCount", "getPageSize", "getPage"]),
       ...mapGetters("car", ["getCar"]),
+      ...mapGetters('shared', ['loading']),
       compPage: {
         get() {
           return this.getPage + 1;
