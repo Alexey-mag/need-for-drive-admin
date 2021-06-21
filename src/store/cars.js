@@ -43,11 +43,11 @@ export default {
           },
         });
         commit("setCars", data.data);
-        this.commit("shared/setLoading", false);
       } catch (e) {
-        this.commit("shared/setLoading", false);
         this.commit("shared/setError", e.message);
         throw e;
+      } finally {
+        this.commit("shared/setLoading", false);
       }
     },
     async fetchPaginationCars(context) {
@@ -70,11 +70,11 @@ export default {
         context.commit("setRowCount", data.count);
         context.commit("setFields", data.fields);
         context.commit("setOnePageCars", data.data);
-        this.commit("shared/setLoading", false);
       } catch (e) {
-        this.commit("shared/setLoading", false);
         this.commit("shared/setError", e.message);
         throw e;
+      } finally {
+        this.commit("shared/setLoading", false);
       }
     },
   },

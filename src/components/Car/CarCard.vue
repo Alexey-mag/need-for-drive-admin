@@ -3,8 +3,8 @@
     <h1 class="car__title">Карточка Автомобиля</h1>
     <el-form label-position="top" ref="formCar" :model="formCar" :rules="rules" class="car__card_form">
       <el-card class="car__small_card">
-        <img v-if="formCar.id" :src="imgPath()" class="car__img" />
-        <img v-else :src="formCar.thumbnail.path" class="car__img" />
+        <img v-if="formCar.id" :src="imgPath()" class="car__img"  alt=""/>
+        <img v-else :src="formCar.thumbnail.path" class="car__img"  alt=""/>
         <p class="card__car_model">{{ formCar.name }}</p>
         <p class="card__car_category">{{ formCar.categoryId }}</p>
         <el-form-item prop="thumbnail">
@@ -93,9 +93,9 @@
 </template>
 
 <script>
+  import { mapActions, mapGetters, mapMutations } from "vuex";
   import InputApp from "@/components/common/InputApp";
   import CheckboxGroupApp from "@/components/common/CheckboxGroupApp";
-  import { mapActions, mapGetters, mapMutations } from "vuex";
   import SelectApp from "../common/SelectApp";
   import ButtonApp from "../common/ButtonApp";
 
@@ -182,7 +182,7 @@
       },
     },
     methods: {
-      ...mapActions("car", ["fetchCarCategory", "postCar", 'deleteCar']),
+      ...mapActions("car", ["fetchCarCategory", "postCar", "deleteCar"]),
       ...mapMutations("car", ["setNewCar"]),
       setFormCarModel(val) {
         this.formCar.name = val;
@@ -242,20 +242,22 @@
         this.$refs[formName].resetFields();
       },
       deleteSelectedCar() {
-          this.$confirm('Вы точно хотите удалить выбранную машину?', 'Внимание', {
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Отмена',
-            type: 'warning'
-          }).then(() => {
-            this.deleteCar(this.formCar)
+        this.$confirm("Вы точно хотите удалить выбранную машину?", "Внимание", {
+          confirmButtonText: "OK",
+          cancelButtonText: "Отмена",
+          type: "warning",
+        })
+          .then(() => {
+            this.deleteCar(this.formCar);
             this.$message({
-              type: 'success',
-              message: 'Машина удалена'
+              type: "success",
+              message: "Машина удалена",
             });
-          }).catch(() => {
+          })
+          .catch(() => {
             this.$message({
-              type: 'info',
-              message: 'Удаление отменено'
+              type: "info",
+              message: "Удаление отменено",
             });
           });
       },

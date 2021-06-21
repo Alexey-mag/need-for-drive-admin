@@ -1,4 +1,4 @@
-<template><div class="error">Error</div></template>
+<template><div class="error">Страница ошибки</div></template>
 
 <script>
   export default {

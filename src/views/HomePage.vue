@@ -51,17 +51,12 @@
       ...mapActions("user", ["loginUser"]),
       submitForm(formName) {
         this.$refs[formName].validate(async valid => {
-          if (valid) {
-            const user = {
-              email: this.form.email,
-              password: this.form.password,
-            };
-            let res = await this.loginUser(user);
-            if (res) {
-              this.$router.push("/admin");
-            }
-          } else {
-            return false;
+          if (!valid) {
+            return;
+          }
+          const res = await this.loginUser(this.form);
+          if (res) {
+            this.$router.push("/admin");
           }
         });
       },

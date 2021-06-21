@@ -9,11 +9,6 @@
 
   export default {
     name: "App",
-    data() {
-      return {
-        windowWidth: window.innerWidth,
-      };
-    },
     computed: {
       ...mapGetters("shared", ["error"]),
     },
@@ -28,7 +23,6 @@
       },
     },
     methods: {
-      ...mapMutations("shared", ["setWindowWidth"]),
       ...mapMutations("user", ["createBase64Token"]),
       ...mapActions("user", ["refreshToken", "logoutUser"]),
     },
@@ -43,11 +37,6 @@
       } else {
         this.createBase64Token();
       }
-      this.setWindowWidth(this.windowWidth);
-      window.onresize = () => {
-        this.windowWidth = window.innerWidth;
-        this.setWindowWidth(this.windowWidth);
-      };
     },
   };
 </script>

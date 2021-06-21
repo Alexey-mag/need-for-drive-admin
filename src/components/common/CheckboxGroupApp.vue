@@ -12,16 +12,6 @@
         model: [],
       };
     },
-    // computed: {
-    //   model: {
-    //     get() {
-    //       return this.item;
-    //     },
-    //     set(val) {
-    //       this.updateValue(val);
-    //     },
-    //   },
-    // },
     props: {
       items: Array,
       classProp: String,

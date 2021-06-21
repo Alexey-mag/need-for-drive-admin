@@ -44,11 +44,11 @@ export default {
           },
         });
         commit("setCarCategory", data.data);
-        this.commit("shared/setLoading", false);
       } catch (e) {
-        this.commit("shared/setLoading", false);
         this.commit("shared/setError", e.message);
         throw e;
+      } finally {
+        this.commit("shared/setLoading", false);
       }
     },
     async postCar({ state }, payload) {
@@ -78,24 +78,13 @@ export default {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + localStorage.getItem("token"),
           },
-          data: {
-            id: state.car.id,
-            name: state.car.name,
-            number: state.car.number,
-            description: state.car.description,
-            colors: state.car.colors,
-            priceMin: state.car.priceMin,
-            priceMax: state.car.priceMax,
-            categoryId: state.car.categoryId,
-            thumbnail: state.car.thumbnail,
-            tank: state.car.tank
-          }
+          data: { ...state.car }
         });
-        this.commit("shared/setLoading", false);
       } catch (e) {
-        this.commit("shared/setLoading", false);
         this.commit("shared/setError", e.message);
         throw e;
+      } finally {
+        this.commit("shared/setLoading", false);
       }
     },
     async deleteCar({state}, payload) {
@@ -112,11 +101,11 @@ export default {
             "Authorization": "Bearer " + localStorage.getItem("token"),
           },
         });
-        this.commit("shared/setLoading", false);
       } catch (e) {
-        this.commit("shared/setLoading", false);
         this.commit("shared/setError", e.message);
         throw e;
+      } finally {
+        this.commit("shared/setLoading", false);
       }
     }
   },

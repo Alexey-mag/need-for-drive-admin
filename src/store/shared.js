@@ -3,9 +3,6 @@ export default {
   state: {
     loading: false,
     error: null,
-    windowWidth: null,
-    mobile: 568,
-    tablet: 1100,
   },
   mutations: {
     setLoading(state, payload) {
@@ -17,9 +14,6 @@ export default {
     clearError(state) {
       state.error = null;
     },
-    setWindowWidth(state, payload) {
-      state.windowWidth = payload;
-    },
   },
   actions: {},
   getters: {
@@ -28,15 +22,6 @@ export default {
     },
     error(state) {
       return state.error;
-    },
-    mobile(state) {
-      return state.mobile;
-    },
-    tablet(state) {
-      return state.tablet;
-    },
-    getWindowWidth(state) {
-      return state.windowWidth;
     },
   },
 };
