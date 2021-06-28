@@ -1,6 +1,6 @@
 <template>
   <el-select
-    v-model="valueOption"
+    :value="value"
     :multiple="multiple"
     collapse-tags
     :placeholder="selectLabel"
@@ -22,25 +22,25 @@
     props: {
       selectLabel: String,
       items: Array,
-      item: String,
+      value: String,
       optionLabel: String,
       optionValue: String,
       selectClass: String,
       multiple: Boolean,
     },
     computed: {
-      valueOption: {
-        get() {
-          return this.item;
-        },
-        set(val) {
-          this.updateValue(val);
-        },
-      },
+      // valueOption: {
+      //   get() {
+      //     return this.item;
+      //   },
+      //   set(val) {
+      //     this.updateValue(val);
+      //   },
+      // },
     },
     methods: {
       updateValue(val) {
-        this.$emit("update", val);
+        this.$emit("input", val);
       },
     },
   };

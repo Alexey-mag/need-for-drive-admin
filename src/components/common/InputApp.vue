@@ -1,28 +1,15 @@
 <template>
-  <el-input v-model="model" size="medium" :type="type" :class="inputClass" @input="updateValue"></el-input>
+  <el-input :value="value" size="medium" :type="type" :class="inputClass" @input="updateValue"></el-input>
 </template>
 
 <script>
   export default {
     name: "InputApp",
-    props: ["item", "inputClass", "type"],
-    computed: {
-      model: {
-        get() {
-          return this.item;
-        },
-        set(val) {
-          this.updateValue(val);
-        },
-      },
-    },
+    props: ["value", "inputClass", "type"],
     methods: {
       updateValue(val) {
-        this.$emit("update", val);
+        this.$emit("input", val);
       },
-    },
-    mounted() {
-      this.model = this.item;
     },
   };
 </script>

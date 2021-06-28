@@ -25,7 +25,7 @@
         <div class="large__card_block1">
           <div class="card__input_block">
             <el-form-item label="Модель автомобиля" prop="name">
-              <input-app :item="formCar.name" input-class="car__input" @update="setFormCarModel" />
+              <input-app v-model="formCar.name" input-class="car__input" />
             </el-form-item>
           </div>
           <div class="card__input_block">
@@ -34,12 +34,11 @@
                 v-if="getCarCategory"
                 select-class="car__input"
                 :items="getCarCategory"
-                :item="formCar.categoryId"
+                v-model="formCar.categoryId"
                 option-label="name"
                 option-value="name"
                 :multiple="false"
                 :select-label="''"
-                @update="setCategory"
               />
             </el-form-item>
           </div>
@@ -48,7 +47,7 @@
           <div class="card__input_block">
             <div class="car__input_and_button">
               <el-form-item label="Доступные цвета">
-                <input-app :item="color" input-class="car__input" @update="carColor" />
+                <input-app v-model="color" input-class="car__input" />
               </el-form-item>
               <el-button class="car__card_input_button" type="default" @click="addColor"
                 ><i class="el-icon-plus card__plus_icon"></i
@@ -56,21 +55,21 @@
             </div>
           </div>
           <el-form-item prop="colors">
-            <checkbox-group-app :items="formCar.colors" @update="setSelectedColors" class-prop="car__card__checkbox" />
+            <checkbox-group-app v-model="formCar.colors" class-prop="car__card__checkbox" />
           </el-form-item>
           <div class="car__input__price_block">
             <el-form-item label="Цена от" prop="priceMin">
-              <input-app :item="formCar.priceMin" input-class="car__input_price" type="number" @update="setPriceMin" />
+              <input-app v-model="formCar.priceMin" input-class="car__input_price" type="number" />
             </el-form-item>
             <el-form-item label="Цена до" prop="priceMax">
-              <input-app :item="formCar.priceMax" input-class="car__input_price" type="number" @update="setPriceMax" />
+              <input-app v-model="formCar.priceMax" input-class="car__input_price" type="number" />
             </el-form-item>
           </div>
           <el-form-item label="Номер" prop="number">
-            <input-app :item="formCar.number" input-class="car__input_price" @update="setFormCarNumber" />
+            <input-app v-model="formCar.number" input-class="car__input_price" />
           </el-form-item>
           <el-form-item label="Бензин" prop="tank">
-            <input-app :item="formCar.tank" input-class="car__input_price" type="number" @update="setFormCarTank" />
+            <input-app v-model="formCar.tank" input-class="car__input_price" type="number" />
           </el-form-item>
         </div>
         <div class="large__card_footer">
@@ -130,16 +129,15 @@
       return {
         formCar: {
           id: "",
+          name: "",
+          description: "",
           number: "",
           tank: 0,
-          description: "",
-          name: "",
           thumbnail: {},
           categoryId: "",
           priceMin: 0,
           priceMax: 0,
           colors: [],
-          selectedColors: [],
         },
         rules: {
           name: [{ required: true, message: "Пожалуйста, введите модель автомобиля", trigger: "blur" }],
@@ -184,12 +182,6 @@
     methods: {
       ...mapActions("car", ["fetchCarCategory", "postCar", "deleteCar"]),
       ...mapMutations("car", ["setNewCar"]),
-      setFormCarModel(val) {
-        this.formCar.name = val;
-      },
-      setSelectedColors(colors) {
-        this.formCar.selectedColors = colors;
-      },
       setImage(event) {
         const image = event.target.files[0];
         const reader = new FileReader();
@@ -203,9 +195,6 @@
           };
         };
       },
-      carColor(color) {
-        this.color = color;
-      },
       addColor() {
         if (this.color) {
           if (this.formCar.colors.includes(this.color)) {
@@ -216,18 +205,9 @@
         }
         this.color = "";
       },
-      setCategory(val) {
-        this.formCar.categoryId = val;
-      },
       submitForm(formName) {
         this.$refs[formName].validate(valid => {
           if (valid) {
-            if (this.formCar.selectedColors.length === 0) {
-              delete this.formCar.selectedColors;
-            } else {
-              this.formCar.colors = this.formCar.selectedColors;
-              delete this.formCar.selectedColors;
-            }
             this.postCar(this.formCar);
             this.$message.success("Успех! Машина сохранена.");
           } else {
@@ -260,18 +240,6 @@
               message: "Удаление отменено",
             });
           });
-      },
-      setPriceMin(val) {
-        this.formCar.priceMin = Number(val);
-      },
-      setPriceMax(val) {
-        this.formCar.priceMax = Number(val);
-      },
-      setFormCarNumber(val) {
-        this.formCar.number = val;
-      },
-      setFormCarTank(val) {
-        this.formCar.tank = Number(val);
       },
       imgPath() {
         return `${process.env.VUE_APP_API_IMG}${this.formCar.thumbnail.path}`;

@@ -5,15 +5,15 @@ export default {
   state: {
     car: {
       id: '',
-      priceMin: 0,
-      priceMax: 0,
       name: "",
+      description: "",
       number: "",
       tank: 0,
-      description: "",
-      categoryId: {},
-      colors: [],
       thumbnail: {},
+      categoryId: {},
+      priceMin: 0,
+      priceMax: 0,
+      colors: [],
     },
     isNewCar: false,
     carCategory: null,
@@ -21,6 +21,7 @@ export default {
   mutations: {
     setCar(state, payload) {
       state.car = payload;
+      console.log(state.car);
       state.isNewCar = true
     },
     setNewCar(state, payload) {

@@ -81,6 +81,7 @@
       ...mapMutations("cars", ["setPage"]),
       ...mapMutations("car", ["setCar"]),
       async editCar(row) {
+        console.log(row);
         await this.setCar(row);
         await this.$router.push({ name: "Car" });
       },
